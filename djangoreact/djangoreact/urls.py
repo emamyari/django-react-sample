@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from djangoreact.api import counter,test
+from djangoreact.api import test, test2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('counters/', counter),
     path('test/', test),
+    path('test2/', test2),
 ]

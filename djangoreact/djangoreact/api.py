@@ -1,21 +1,44 @@
 import json
+import pyodbc
 from django.http import HttpResponse
 # from restframework.decorators import api_view
 # @api_view(['POST'])
 
-def counter(request):
-
-    s1 = {"id": 1, "value": 26,"title":"آیفون"}
-    s2 = {"id": 2, "value": 123,"title":"مک بوک 2021 M1"}
-    s3 = {"id": 3, "value": 5,"title":"قاب گوشی آیفون"}
-    s4 = {"id": 4, "value": 2,"title":"کیف لپ تاپ"}
-    s5 = {"id": 5, "value": 1,"title":"کنترل تلویزیون"}
-
-    list = [s1, s2, s3, s4, s5]
-
-    final = {"counters": list}
-    return HttpResponse(json.dumps(final), content_type='application/json')
-
 def test(request):
+    connection = pyodbc.connect(
+        'DRIVER={ODBC Driver 17 for SQL Server};SERVER=46.34.161.23,13433;DATABASE=dbTest;UID=sa;PWD=111@a')
+    cursor = connection.cursor()
 
-    return HttpResponse('<h1 style="color:red">Hello</h1>')
+    cursor.execute("select * from PriceHistory")
+
+    rows=cursor.fetchall()
+
+    list=[]
+    for row in rows:
+        obj=priceHistory(row[1],row[2])
+        list.append(obj.__dict__)
+    return HttpResponse(json.dumps(list), content_type='application/json')
+
+
+class priceHistory():
+    def __init__(self,Pdate,Price):
+        self.Pdate=Pdate
+        self.Price=Price
+
+def test2(request):
+    connection = pyodbc.connect(
+        'DRIVER={ODBC Driver 17 for SQL Server};SERVER=46.34.161.23,13433;DATABASE=dbTest;UID=sa;PWD=111@a')
+    cursor = connection.cursor()
+
+    cursor.execute("select * from PriceHistory")
+
+    rows=cursor.fetchall()
+
+    list=[]
+    for row in rows:
+        list.append([row[1],row[2]])
+    return HttpResponse(json.dumps(list), content_type='application/json')
+
+
+
+
